@@ -24,13 +24,12 @@ public class ProductData {
         this.supplierId   = supplierId;
         this.companyName = companyName;
         this.unitPrice = unitPrice;
-
-        /*
+    }
+    ProductData(String CategoryId, int QuantityPerUnit, int UnitsInStock, int UnitsOnOrder){
         this.CategoryId = CategoryId; 
         this.QuantityPerUnit = QuantityPerUnit; 
-        this.UnitsInStock = nitsInStock;
+        this.UnitsInStock = UnitsInStock;
         this.UnitsOnOrder = UnitsOnOrder;
-        */
     }
     public static Vector<ProductData> getProductList(Connection connection) {
         Vector<ProductData> vec = new Vector<ProductData>();
@@ -95,7 +94,7 @@ public class ProductData {
                     result.getString("ProductId"),
                     result.getString("ProductName"),
                     Integer.parseInt(result.getString("SupplierId")),
-                    null,
+                    null, //This would be the result of product.companyName
                     Float.parseFloat(result.getString("UnitPrice"))
                 );
             }
@@ -107,6 +106,33 @@ public class ProductData {
         }
         return product;
     }
+
+    public static ProductData getProductEdit(Connection connection, String id) {
+        String sql = "Select CategoryId, QuantityPerUnit, UnitsInStock, UnitsOnOrder FROM Products";
+        sql += " WHERE ProductId=?";
+        System.out.println("getProduct: " + sql);
+        ProductData product = null;;
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, id);
+            ResultSet result = pstmt.executeQuery();
+            if(result.next()) {
+                product = new ProductData(
+                    result.getString("CategoryId"),
+                    Integer.parseInt(result.getString("QuantityPerUnit")),
+                    Integer.parseInt(result.getString("UnitsInStock")),
+                    Integer.parseInt(result.getString("UnitsOnOrder")),
+                );
+            }
+            result.close();
+            pstmt.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in getProduct: " + sql + " Exception: " + e);
+        }
+        return product;
+    }
+
     public static int updateProduct(Connection connection, ProductData product) {
         String sql ="UPDATE Products "
             + "SET ProductName = ?, SupplierId = ?, UnitPrice = ?"

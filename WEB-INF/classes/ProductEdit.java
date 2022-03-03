@@ -37,6 +37,17 @@ public class ProductEdit extends HttpServlet {
         toClient.println("<tr><td>Image</td>");
         toClient.println("<td><img src='http://northbrick1.appspot.com/images/" + product.productId + ".png'></td>");
         toClient.println("</tr>");
+
+        ProductData productEdit = ProductData.getProductEdit(connection, idStr);
+        toClient.println("<tr><td>Category Id</td>");
+        toClient.println("<td><input name='CategoryId' value='" + productEdit.CategoryId + "'></td></tr>");
+        toClient.println("<tr><td>Quantity Per Unit</td>");
+        toClient.println("<td><input name='QuantityPerUnit' value='" + productEdit.QuantityPerUnit + "'></td></tr>");
+        toClient.println("<tr><td>Units In Stock</td>");
+        toClient.println("<td><input name='sUnitsInStock' value='" + product.UnitsInStock + "'></td>");
+        toClient.println("<tr><td>Units On Order</td>");
+        toClient.println("<td><input name='UnitsOnOrder' value='" + product.UnitsOnOrder + "'></td>");
+        toClient.println("</tr>");
         toClient.println("</table>");
         toClient.println("<input type='submit'>");
         toClient.println("</form>");
